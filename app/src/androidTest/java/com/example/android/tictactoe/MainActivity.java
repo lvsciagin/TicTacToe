@@ -2,43 +2,47 @@ package com.example.android.tictactoe;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+import android.view.View;
 import android.widget.Toast;
+import android.widget.TextView;
+
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Button[][] buttons = new Button[3][3];
-
     private boolean player1Turn = true;
 
-    private int roundCount;
+    private Button[][] buttons = new Button[3][3];
 
-    private int player1Points;
-    private int player2Points;
+    private int rounds;
 
-    private TextView textViewPlayer1;
     private TextView textViewPlayer2;
+    private TextView textViewPlayer1;
+
+    private int player2Points;
+    private int player1Points;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textViewPlayer1 = findViewById(R.id.text_view_p1);
-        textViewPlayer2 = findViewById(R.id.text_view_p2);
+        textViewPlayer2 = findViewById(R.id.player_2);
+        textViewPlayer1 = findViewById(R.id.player_1);
+
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 String buttonID = "button_" + i + j;
-                int resID = getResources().getIdentifier(buttonID, "id", getPackageName());
-                buttons[i][j] = findViewById(resID);
+                int resourceID = getResources().getIdentifier(buttonID, "id", getPackageName());
+                buttons[i][j] = findViewById(resourceID);
                 buttons[i][j].setOnClickListener(this);
             }
         }
 
-        Button buttonReset = findViewById(R.id.button_reset);
+        Button buttonReset = findViewById(R.id.reset_btn);
         buttonReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,27 +59,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (player1Turn) {
             ((Button) v).setText("X");
+
         } else {
             ((Button) v).setText("O");
         }
 
-        roundCount++;
+        rounds++;
 
-        if (checkForWin()) {
+        if (checkWin()) {
             if (player1Turn) {
                 player1Wins();
             } else {
                 player2Wins();
             }
-        } else if (roundCount == 9) {
+        } else if (rounds == 9) {
             draw();
         } else {
-            player1Turn = !player1Turn;
+            player1Turn = !player1Turn; //switch turns
         }
 
     }
 
-    private boolean checkForWin() {
+    private boolean checkWin() {
         String[][] field = new String[3][3];
 
         for (int i = 0; i < 3; i++) {
@@ -115,29 +120,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return false;
     }
 
-    private void player1Wins() {
-        player1Points++;
-        Toast.makeText(this, "Player 1 wins!", Toast.LENGTH_SHORT).show();
+    private void player2Wins() {
+        player2Points++;
+        Toast.makeText(this, "Winner: Player 2!", Toast.LENGTH_SHORT).show();
         updatePointsText();
         resetBoard();
     }
 
-    private void player2Wins() {
-        player2Points++;
-        Toast.makeText(this, "Player 2 wins!", Toast.LENGTH_SHORT).show();
+    private void player1Wins() {
+        player1Points++;
+        Toast.makeText(this, "Winner: Player 1!", Toast.LENGTH_SHORT).show();
         updatePointsText();
         resetBoard();
     }
+
+    private void updatePointsText() {
+        textViewPlayer2.setText("Player 2: " + player2Points);
+        textViewPlayer1.setText("Player 1: " + player1Points);
+
+    }
+
 
     private void draw() {
         Toast.makeText(this, "Draw!", Toast.LENGTH_SHORT).show();
         resetBoard();
     }
 
-    private void updatePointsText() {
-        textViewPlayer1.setText("Player 1: " + player1Points);
-        textViewPlayer2.setText("Player 2: " + player2Points);
-    }
 
     private void resetBoard() {
         for (int i = 0; i < 3; i++) {
@@ -146,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
 
-        roundCount = 0;
+        rounds = 0;
         player1Turn = true;
     }
 }
