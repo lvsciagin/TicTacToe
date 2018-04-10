@@ -150,10 +150,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void resetBoard() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                buttons[i][j].setText("");
+                buttons[i][j].setText(""); //reset all buttons to initial empty state
             }
         }
 
+// restart the game
         rounds = 0;
         player1Turn = true;
     }
